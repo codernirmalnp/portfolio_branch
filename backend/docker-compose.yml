@@ -1,0 +1,57 @@
+version: '3'
+services:
+  postgress:
+    container_name: postgress
+    image: 'postgres:latest'
+    ports:
+      - '5432:5432'
+    volumes: 
+      - '/data/postgres:/data/postgres'
+    env_file:
+      - .env
+    networks:
+      - postgres
+  pgadmin:
+    links:
+      - 'postgress'
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    ports:
+      - '8080:80'
+    volumes:
+      - /data/pgadmin:/root/.pgadmin
+    env_file:
+      - .env
+    networks:
+      - postgres
+  mongo:
+    image: mongo
+    container_name: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    volumes:
+      - './database/db:/data/db'
+      - './database/dev.archive:/Databases/dev.archive'
+      - './database/production:/Databases/production'
+  mongo-express:
+    image: mongo-express
+    container_name: mexpress
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+      - >-
+        ME_CONFIG_MONGODB_URL=mongodb://root:password@mongo:27017/?authSource=admin
+      - ME_CONFIG_BASICAUTH_USERNAME=mexpress
+      - ME_CONFIG_BASICAUTH_PASSWORD=mexpress
+    links:
+      - mongo
+    restart: unless-stopped
+    ports:
+      - '8081:8081'
+networks:
+  postgres:
+    driver: bridge
