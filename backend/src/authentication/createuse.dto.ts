@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsEmail, IsObject } from "class-validator";
+import { IsString, IsNotEmpty, IsEmail, IsObject,IsOptional, MaxLength, MinLength } from "class-validator";
 
 class CreateUserDto {
   // @IsString()
@@ -6,17 +6,24 @@ class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
-  public name!: string;
+  public name: string;
 
-  @IsString()
-  @IsNotEmpty()
+ 
   @IsEmail()
-  public email!: string;
-
-  @IsString()
   @IsNotEmpty()
-  public password!: string;
+  public email: string;
+
+  @MinLength(5, {
+    message: 'Password too short',
+  })
+  @MaxLength(10, {
+    message: 'Password too long',
+  })
+  @IsNotEmpty()
+  public password: string;
+
   @IsObject()
+  @IsOptional()
   public address!: { street: string; city: string; country: string };
 }
 

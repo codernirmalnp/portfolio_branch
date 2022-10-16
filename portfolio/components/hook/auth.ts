@@ -1,25 +1,8 @@
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
 import request from "../api/interceptor";
+import { useRouter } from "next/router";
 
-const createUser = (data) =>
-  request({
-    url: "/auth/register",
-    method: "post",
-    data: data,
-    withCredentials: true,
-  });
-
-export const useCreateUser = () => {
-  return useMutation(createUser, {
-    onError: (_err, _newTodo, context) => {
-      toast.error("Cannot create post");
-    },
-    onSettled: () => {
-      toast.success("Post created Successfully");
-    },
-  });
-};
 const login = (data) =>
   request({
     url: "/auth/login",
@@ -29,12 +12,21 @@ const login = (data) =>
   });
 
 export const useLogin = () => {
+  const router=useRouter();
   return useMutation(login, {
     onError: (_err, _newTodo, context) => {
-      toast.error("Cannot create post");
+      toast.error("Something went wrong");
     },
-    onSettled: () => {
-      toast.success("Post created Successfully");
+    onSuccess: (response) => {
+      if (response.status === 200) {
+        toast.success("Login Success");
+        router.push('./dashboard')
+      }
+      else {
+       
+        toast.error(response.response.data.message);
+      }
+
     },
   });
 };

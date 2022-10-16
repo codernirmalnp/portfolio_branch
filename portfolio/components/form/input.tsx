@@ -10,7 +10,8 @@ type InputProps = {
   type: string;
   placeholder: string;
   label: string;
-  classes: {
+  icon?: React.ReactNode;
+  classes?: {
     input?: string;
     label?: string;
     root?: string;
@@ -25,6 +26,7 @@ const InputField = <T extends FieldValues>({
   placeholder,
   classes,
   label,
+  icon
 }: Props<T>) => {
   const {
     field: { onChange, onBlur, value, ref },
@@ -38,16 +40,21 @@ const InputField = <T extends FieldValues>({
       <label htmlFor={label} className={classes?.label}>
         {label}
       </label>
-      <input
-        className={classes?.input}
-        placeholder={placeholder}
-        type={type}
-        onChange={onChange} // send value to hook form
-        onBlur={onBlur} // notify when input is touched/blur
-        value={value} // input value
-        name={name} // send down the input name
-        ref={ref} // send input ref, so we can focus on input when error appear
-      />
+
+      <div >
+
+        <input
+          className={classes?.input}
+          placeholder={placeholder}
+          type={type}
+          onChange={onChange} // send value to hook form
+          onBlur={onBlur} // notify when input is touched/blur
+          value={value} // input value
+          name={name} // send down the input name
+          ref={ref} // send input ref, so we can focus on input when error appear
+        />
+        {icon ? <span className="input-icon">{icon}</span> : ""}
+      </div>
       {error ? <p className={classes?.error}>{error?.message}</p> : null}
     </div>
   );

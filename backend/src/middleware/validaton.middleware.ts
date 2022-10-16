@@ -9,6 +9,7 @@ function validateMiddleware<T>(
   return (req, res, next) => {
     validate(plainToInstance(type, req.body), { skipMissingProperties }).then(
       (errors: ValidationError[]) => {
+       
         if (errors.length > 0) {
           let message = "";
           errors.map((error: ValidationError) => {
@@ -16,8 +17,11 @@ function validateMiddleware<T>(
               message = `${val}`;
             });
           });
+        
+          
           next(new HttpException(400, message));
         } else {
+         
           next();
         }
       }

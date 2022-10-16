@@ -14,9 +14,10 @@ async function authMiddleware(
   const req = request as RequestWithUser;
   const cookies = req.cookies.auth;
   const userRepo = userModal;
-
   if (cookies) {
     const secret = process.env.JWT_SECRET!;
+
+
     try {
       const verificationResponse = jwt.verify(
         cookies,

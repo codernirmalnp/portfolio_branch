@@ -9,21 +9,25 @@ import User from "../users/user.interface";
 class AuthenticationService {
   public user = userModal;
   public async register(userData: CreateUserDto) {
+
+
     if (await this.user.findOne({ email: userData.email })) {
       throw new UserWithThatEmailAlreadyExistException(userData.email);
     }
     const hashedPassword = await bcrypt.hash(userData.password, 10);
     const userCreate = await this.user.create({
       ...userData,
-      hashedPassword: hashedPassword,
+      password: hashedPassword,
     });
-    Reflect.deleteProperty(userCreate, "password");
+    
+    await delete userCreate.password;
     const tokenData = this.createToken(userCreate);
     const cookie = this.createCookie(tokenData);
-    return {
+   return {
       cookie,
       userCreate,
     };
+
   }
   public createCookie(tokenData: TokenData) {
     return tokenData.token;

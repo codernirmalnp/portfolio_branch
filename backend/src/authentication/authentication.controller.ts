@@ -7,6 +7,16 @@ import CreateUserDto from "./createuse.dto";
 import LoginDto from "./loginIn.dto";
 import WrongCredentialsException from "../exceptions/WrongCrendentialsExceptions";
 import AuthenticationService from "./authentication.service";
+import SuccessException from "../exceptions/SuccessException";
+import authMiddleware from "../middleware/auth.middleware";
+type UserData={
+  name:string,
+  email:string
+}
+interface RequestWithUser extends Request{
+  user:UserData
+
+}
 
 class AuthenticationController implements Controller {
   public path = "/auth";
@@ -28,6 +38,11 @@ class AuthenticationController implements Controller {
       validateMiddleware(LoginDto),
       this.loggingIn
     );
+    this.router.get(
+      `${this.path}/me`,
+      authMiddleware,
+      this.getCurrentUser
+    );
 
     this.router.post(`${this.path}/logout`, this.loggingOut);
   }
@@ -38,17 +53,22 @@ class AuthenticationController implements Controller {
     next: NextFunction
   ) => {
     const userData: CreateUserDto = req.body;
+   
     try {
       const { cookie, userCreate } = await this.authenticationService.register(
         userData
       );
+    
 
+      
       res.cookie("auth", cookie, {
         secure: process.env.NODE_ENV !== "development",
         httpOnly: true,
         maxAge: 60 * 60 * 10000,
       });
-      res.send(userCreate);
+      
+     
+      res.send({success:true,user:{id:userCreate._id, email:userCreate.email,name:userCreate.name}});
     } catch (error) {
       next(error);
     }
@@ -73,7 +93,7 @@ class AuthenticationController implements Controller {
           httpOnly: true,
           maxAge: 60 * 60 * 10000,
         });
-        response.send(user);
+        response.send(new SuccessException("Login Successfull",user))
       } else {
         next(new WrongCredentialsException());
       }
@@ -81,7 +101,9 @@ class AuthenticationController implements Controller {
       next(new WrongCredentialsException());
     }
   };
-
+  private getCurrentUser = (request: RequestWithUser, response: Response) => {
+    response.send(request.user);
+  };
   private loggingOut = (request: Request, response: Response) => {
     response.clearCookie("auth");
     response.send(200);

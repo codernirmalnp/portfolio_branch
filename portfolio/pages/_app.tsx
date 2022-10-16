@@ -6,7 +6,7 @@ import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { Toaster } from "react-hot-toast";
-import "../styles/globals.scss";
+import "../styles/main.scss";
 type GetLayout = (page: ReactNode) => ReactNode;
 
 // eslint-disable-next-line @typescript-eslint/ban-types

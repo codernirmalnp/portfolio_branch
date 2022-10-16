@@ -6,6 +6,7 @@ type Options = {
   method: string;
   data?: any;
   withCredentials?: boolean;
+  headers?:any
 };
 const request = (options: Options) => {
   const Success = (res) => res;

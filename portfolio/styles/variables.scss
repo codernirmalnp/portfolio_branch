@@ -1,0 +1,64 @@
+$gray-900: #000000;
+$gray-800: #1f1f1f;
+$gray-700: #2e2e2e;
+$gray-600: #313131;
+$gray-500: #969593;
+$gray-400: #a6a6a6;
+$gray-300: #bdbbb7;
+$gray-200: #f1f1f1;
+$gray-100: #ffffff;
+$green-500: #45ffbc;
+$olive-500: #e3ffa8;
+;
+$yellow: #ffc107 !default;
+$red: #dc3545 !default;
+$white: var($gray-100);
+$text-primary: $gray-100;
+$text-secondary: $gray-200;
+$text-tertiary: $gray-500;
+$turquoise: #58c996;
+$dark-text: hsl(0, 0%, 13%);
+$border-width: 2px;
+
+
+$bg-color: #f2f6f9;
+$active-color: #25be64;
+$inactive-color: #dadde4;
+$new-color: #febf02;
+$text-color: #141a4e;
+$table-bg-color: #fefefe;
+$table-head-bg-color: #e1e8f2;
+$table-border-color: #edeef2;
+$hover-bg-color: #fb4f83;
+$hover-text-color: #ffffff;
+
+@mixin mobile-xxs {
+    @media (max-width: 400px) {
+        @content;
+    }
+}
+
+//min-sm
+@mixin min-tablet {
+    @media (min-width: 768px) {
+        @content;
+    }
+}
+
+//md
+@mixin desktop {
+    @media (max-width: 991px) {
+        @content;
+    }
+}
+
+//sm to md
+@mixin tablet-to-desktop {
+    @media (min-width: 768px) and (max-width: 991px) {
+        @content;
+    }
+}
+
+
+
+
